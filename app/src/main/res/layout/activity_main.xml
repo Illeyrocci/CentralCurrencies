@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/appbar_title"
+                    android:textSize="@dimen/appbar_title" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/half_main"
+                    android:text="@string/update_time"
+                    android:textSize="@dimen/appbar_subtitle"
+                    android:textColor="?attr/colorOnSecondaryContainer"/>
+            </LinearLayout>
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/main_padding"
+            android:layout_marginVertical="@dimen/half_main"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="6"
+                android:text="@string/currency"
+                android:textSize="@dimen/table"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:text="@string/rate"
+                android:textSize="@dimen/table"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <include layout="@layout/currency_view_item" />
+            <include layout="@layout/currency_view_item" />
+            <include layout="@layout/currency_view_item" />
+            <include layout="@layout/currency_view_item" />
+            <include layout="@layout/currency_view_item" />
+            <include layout="@layout/currency_view_item" />
+            <include layout="@layout/currency_view_item" />
+            <include layout="@layout/currency_view_item" />
+            <include layout="@layout/currency_view_item" />
+            <include layout="@layout/currency_view_item" />
+            <include layout="@layout/currency_view_item" />
+            <include layout="@layout/currency_view_item" />
+            <include layout="@layout/currency_view_item" />
+            <include layout="@layout/currency_view_item" />
+            <include layout="@layout/currency_view_item" />
+            <include layout="@layout/currency_view_item" />
+            <include layout="@layout/currency_view_item" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
