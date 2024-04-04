@@ -1,4 +1,4 @@
-package com.illeyrocci.centralcurrencies.presentation
+package com.illeyrocci.centralcurrencies.domain.model
 
 
 sealed class Resource<T>(

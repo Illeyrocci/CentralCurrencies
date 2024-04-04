@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.illeyrocci.centralcurrencies.databinding.CurrencyViewItemBinding
 import com.illeyrocci.centralcurrencies.domain.model.CurrencyItem
 
-class CurrencyAdapter(
+internal class CurrencyAdapter(
     private val context: Context
 ) : RecyclerView.Adapter<CurrencyViewHolder>() {
 

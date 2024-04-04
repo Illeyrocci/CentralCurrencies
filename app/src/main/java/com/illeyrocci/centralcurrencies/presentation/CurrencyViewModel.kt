@@ -2,25 +2,25 @@ package com.illeyrocci.centralcurrencies.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.illeyrocci.centralcurrencies.data.remote.dto.CurrencyDto
-import com.illeyrocci.centralcurrencies.data.remote.dto.ValuteResponse
+import com.illeyrocci.centralcurrencies.domain.model.CurrencyItem
+import com.illeyrocci.centralcurrencies.domain.model.Resource
 import com.illeyrocci.centralcurrencies.domain.usecase.GetCurrenciesUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class CurrencyViewModel(
+internal class CurrencyViewModel(
     private val getCurrencyUseCase: GetCurrenciesUseCase
 ) : ViewModel() {
 
-    val lastUpdateTime = String
+    private var lastUpdateTime: String = "unknown"
 
-    private val _currenciesStream = MutableStateFlow<ValuteResponse>(
-        ValuteResponse("","","", mapOf("" to CurrencyDto("", "", "", 1, "", 1.0, 1.0)))
+    private val _currenciesStateStream = MutableStateFlow<Resource<List<CurrencyItem>>>(
+        Resource.Error("Data not yet fetched")
     )
-    val currenciesStream: StateFlow<ValuteResponse>
-        get() = _currenciesStream.asStateFlow()
+    val currenciesStateStream: StateFlow<Resource<List<CurrencyItem>>>
+        get() = _currenciesStateStream.asStateFlow()
 
     init {
         //TODO(getLastUpdated updateTime from preferences repository) and set [state]
@@ -31,6 +31,10 @@ class CurrencyViewModel(
     }
 
     private fun getCurrencies() = viewModelScope.launch {
-        _currenciesStream.value = getCurrencyUseCase.getCurrencies()
+        _currenciesStateStream.value = getCurrencyUseCase.getCurrencies()
+    }
+
+    fun setLastUpdatedTime(newTime: String) {
+        lastUpdateTime = newTime
     }
 }

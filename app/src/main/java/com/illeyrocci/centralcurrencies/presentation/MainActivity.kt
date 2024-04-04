@@ -2,6 +2,7 @@ package com.illeyrocci.centralcurrencies.presentation
 
 import android.os.Bundle
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -12,13 +13,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.illeyrocci.centralcurrencies.R
-import com.illeyrocci.centralcurrencies.data.remote.mapper.CurrencyMapper
 import com.illeyrocci.centralcurrencies.databinding.ActivityMainBinding
+import com.illeyrocci.centralcurrencies.domain.model.Resource
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.Date
 
-class MainActivity : AppCompatActivity() {
+internal class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -35,13 +36,8 @@ class MainActivity : AppCompatActivity() {
         window.statusBarColor = getResources().getColor(R.color.primary, theme)
 
         val viewModel =
-            ViewModelProvider(
-                this,
-                CurrencyViewModelFactory(application)
-            )[CurrencyViewModel::class.java]
+            ViewModelProvider(this, CurrencyViewModelFactory())[CurrencyViewModel::class.java]
 
-
-        val mapper = CurrencyMapper()
         val currencyAdapter = CurrencyAdapter(this@MainActivity)
 
         binding.recycler.layoutManager = LinearLayoutManager(this@MainActivity)
@@ -49,11 +45,23 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.currenciesStream.collectLatest {
-                    currencyAdapter.submitData(
-                        mapper.mapDtoListToModelList(it.valute.values.toList())
-                    )
-                    binding.time.text = getString(R.string.update_time, Date().toString())
+                viewModel.currenciesStateStream.collectLatest {
+                    when (it) {
+                        is Resource.Success -> {
+                            currencyAdapter.submitData(it.data ?: emptyList())
+                            val lastUpdate = Date().toString()
+
+                            viewModel.setLastUpdatedTime(lastUpdate)
+                            binding.time.text = getString(R.string.update_time, Date().toString())
+
+                        }
+                        is Resource.Loading -> {
+                            Toast.makeText(this@MainActivity, "LOADING", Toast.LENGTH_LONG).show()
+                        }
+                        is Resource.Error -> {
+                            Toast.makeText(this@MainActivity, "ERROR", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
             }
         }

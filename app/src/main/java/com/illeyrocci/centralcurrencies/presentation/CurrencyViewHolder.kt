@@ -6,7 +6,7 @@ import com.illeyrocci.centralcurrencies.databinding.CurrencyViewItemBinding
 import com.illeyrocci.centralcurrencies.domain.model.CurrencyItem
 import java.util.Locale
 
-class CurrencyViewHolder(
+internal class CurrencyViewHolder(
     private val binding: CurrencyViewItemBinding
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(currencyItem: CurrencyItem, context: Context) {
