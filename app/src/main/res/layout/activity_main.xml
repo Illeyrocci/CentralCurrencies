@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".presentation.MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
@@ -30,6 +30,7 @@
                     android:textSize="@dimen/appbar_title" />
 
                 <TextView
+                    android:id="@+id/time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/half_main"
@@ -71,30 +72,10 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler"
             android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <include layout="@layout/currency_view_item" />
-            <include layout="@layout/currency_view_item" />
-            <include layout="@layout/currency_view_item" />
-            <include layout="@layout/currency_view_item" />
-            <include layout="@layout/currency_view_item" />
-            <include layout="@layout/currency_view_item" />
-            <include layout="@layout/currency_view_item" />
-            <include layout="@layout/currency_view_item" />
-            <include layout="@layout/currency_view_item" />
-            <include layout="@layout/currency_view_item" />
-            <include layout="@layout/currency_view_item" />
-            <include layout="@layout/currency_view_item" />
-            <include layout="@layout/currency_view_item" />
-            <include layout="@layout/currency_view_item" />
-            <include layout="@layout/currency_view_item" />
-            <include layout="@layout/currency_view_item" />
-            <include layout="@layout/currency_view_item" />
-
-        </LinearLayout>
+            android:layout_width="match_parent" />
 
     </androidx.core.widget.NestedScrollView>
 

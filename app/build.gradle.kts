@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.compilerKsp)
 }
 
 android {
@@ -33,10 +34,24 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
-
+    ksp(libs.ksp)
+    implementation(libs.http.interceptor)
+    implementation(libs.gson.converter)
+    implementation(libs.retrofit)
+    implementation(libs.datastore.preferences)
+    implementation(libs.okhttp)
+    implementation(libs.recyclerview)
+    implementation(libs.room.ktx)
+    implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
