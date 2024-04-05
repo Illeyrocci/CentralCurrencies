@@ -17,6 +17,7 @@ import com.illeyrocci.centralcurrencies.databinding.ActivityMainBinding
 import com.illeyrocci.centralcurrencies.domain.model.Resource
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.text.DateFormat
 import java.util.Date
 
 internal class MainActivity : AppCompatActivity() {
@@ -54,7 +55,7 @@ internal class MainActivity : AppCompatActivity() {
                     binding.toggleVisibility(state)
                     if (state is Resource.Success && state.data != null) {
                         currencyAdapter.submitData(state.data)
-                        val lastUpdate = Date().toString()
+                        val lastUpdate = DateFormat.getDateTimeInstance().format(Date().time)
                         viewModel.setLastUpdatedTime(lastUpdate)
                         binding.time.text = getString(R.string.update_time, lastUpdate)
                     }
