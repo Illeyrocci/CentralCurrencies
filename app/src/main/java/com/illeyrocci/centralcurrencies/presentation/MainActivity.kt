@@ -46,7 +46,7 @@ internal class MainActivity : AppCompatActivity() {
             recycler.adapter = currencyAdapter
             time.text =
                 resources.getString(R.string.update_time, resources.getString(R.string.unknown))
-            retryButton.setOnClickListener { viewModel.getCurrencies() }
+            retryButton.setOnClickListener { viewModel.refreshUiModel() }
         }
 
         lifecycleScope.launch {
@@ -55,7 +55,7 @@ internal class MainActivity : AppCompatActivity() {
                     binding.toggleVisibility(state)
                     if (state is Resource.Success && state.data != null) {
                         currencyAdapter.submitData(state.data)
-                        val lastUpdate = DateFormat.getDateTimeInstance().format(Date().time)
+                        val lastUpdate = getCurrentTime()
                         viewModel.setLastUpdatedTime(lastUpdate)
                         binding.time.text = getString(R.string.update_time, lastUpdate)
                     }
@@ -82,6 +82,9 @@ internal class MainActivity : AppCompatActivity() {
         recycler.isVisible = stateSuccess && !isSuccessDataNull
         tableHeader.isVisible = stateSuccess && !isSuccessDataNull
     }
+
+    private fun getCurrentTime() =
+        DateFormat.getDateTimeInstance().format(Date().time)
 }
 
 

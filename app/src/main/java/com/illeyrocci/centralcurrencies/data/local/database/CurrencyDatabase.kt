@@ -1,12 +1,19 @@
 package com.illeyrocci.centralcurrencies.data.local.database
 
 import android.app.Application
+import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.illeyrocci.centralcurrencies.data.local.dao.CurrencyDao
+import com.illeyrocci.centralcurrencies.data.local.entity.CurrencyDbModel
 
-//TODO(DATABASE ROOM)
+@Database(
+    entities = [CurrencyDbModel::class],
+    version = 1,
+    exportSchema = false
+)
 internal abstract class CurrencyDatabase : RoomDatabase() {
+
     abstract fun currencyDao(): CurrencyDao
 
     companion object {
@@ -24,9 +31,6 @@ internal abstract class CurrencyDatabase : RoomDatabase() {
             Room.databaseBuilder(
                 application,
                 CurrencyDatabase::class.java, DB_NAME
-            )
-                .build()
+            ).build()
     }
-
-
 }

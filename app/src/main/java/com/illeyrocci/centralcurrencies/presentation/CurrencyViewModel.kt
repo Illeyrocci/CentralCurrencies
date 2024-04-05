@@ -23,15 +23,14 @@ internal class CurrencyViewModel(
 
     init {
         //TODO(getLastUpdated updateTime from preferences repository) and set [state]
-        //TODO(getCached data from database repository) and set [currenciesState]
 
         //TODO(set service or wormanager that will do getCurrencies()) and emit [currenciesState]
-        getCurrencies()
+        refreshUiModel()
     }
 
-    fun getCurrencies() = viewModelScope.launch {
+    fun refreshUiModel() = viewModelScope.launch {
         _currenciesStateStream.value = Resource.Loading()
-        _currenciesStateStream.value = getCurrencyUseCase.getCurrencies()
+        _currenciesStateStream.value = getCurrencyUseCase()
     }
 
     fun setLastUpdatedTime(newTime: String) {

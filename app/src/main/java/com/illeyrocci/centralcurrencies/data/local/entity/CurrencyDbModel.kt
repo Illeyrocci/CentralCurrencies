@@ -1,8 +1,11 @@
 package com.illeyrocci.centralcurrencies.data.local.entity
 
-//TODO(ENTITY ROOM)
-data class CurrencyDbModel(
-    val charCode: String,
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "currencies")
+internal data class CurrencyDbModel(
+    @PrimaryKey val charCode: String,
     val name: String,
     val rate: Double
 )

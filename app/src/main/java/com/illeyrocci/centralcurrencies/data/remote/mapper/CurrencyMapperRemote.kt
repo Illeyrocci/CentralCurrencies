@@ -4,7 +4,7 @@ import com.illeyrocci.centralcurrencies.data.remote.dto.ValuteResponse
 import com.illeyrocci.centralcurrencies.domain.model.CurrencyItem
 import kotlin.math.roundToInt
 
-internal class CurrencyMapper {
+internal class CurrencyMapperRemote {
     fun mapValuteResponseToCurrencyItemList(valuteResponse: ValuteResponse): List<CurrencyItem> {
         val dtoList = valuteResponse.valute.values.toList()
         return dtoList.map {
