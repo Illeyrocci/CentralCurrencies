@@ -1,7 +1,12 @@
 <resources>
     <string name="app_name">CentralCurrencies</string>
-    <string name="update_time">Updated: %1$s</string>
+    <string name="update_time">Last update: %1$s</string>
+    <string name="unknown">unknown</string>
     <string name="appbar_title">Exchange rates of the Central Bank of Russia against the ruble</string>
     <string name="currency">Currency</string>
     <string name="rate">Rate</string>
+    <string name="retry">Retry</string>
+    <string name="connection_failed">Connection failed</string>
+    <string name="the_list_may_be_outdated">The list may be outdated</string>
+    <string name="error_verbose_message">(%1s)</string>
 </resources>

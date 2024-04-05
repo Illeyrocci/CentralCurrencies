@@ -2,11 +2,11 @@ package com.illeyrocci.centralcurrencies.presentation
 
 import android.os.Bundle
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -38,32 +38,49 @@ internal class MainActivity : AppCompatActivity() {
         val viewModel =
             ViewModelProvider(this, CurrencyViewModelFactory())[CurrencyViewModel::class.java]
 
-        val currencyAdapter = CurrencyAdapter(this@MainActivity)
+        val currencyAdapter = CurrencyAdapter(this)
 
-        binding.recycler.layoutManager = LinearLayoutManager(this@MainActivity)
-        binding.recycler.adapter = currencyAdapter
+        with(binding) {
+            recycler.layoutManager = LinearLayoutManager(this@MainActivity)
+            recycler.adapter = currencyAdapter
+            time.text =
+                resources.getString(R.string.update_time, resources.getString(R.string.unknown))
+            retryButton.setOnClickListener { viewModel.getCurrencies() }
+        }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.currenciesStateStream.collectLatest {
-                    when (it) {
-                        is Resource.Success -> {
-                            currencyAdapter.submitData(it.data ?: emptyList())
-                            val lastUpdate = Date().toString()
-
-                            viewModel.setLastUpdatedTime(lastUpdate)
-                            binding.time.text = getString(R.string.update_time, Date().toString())
-
-                        }
-                        is Resource.Loading -> {
-                            Toast.makeText(this@MainActivity, "LOADING", Toast.LENGTH_LONG).show()
-                        }
-                        is Resource.Error -> {
-                            Toast.makeText(this@MainActivity, "ERROR", Toast.LENGTH_SHORT).show()
-                        }
+                viewModel.currenciesStateStream.collectLatest { state ->
+                    binding.toggleVisibility(state)
+                    if (state is Resource.Success && state.data != null) {
+                        currencyAdapter.submitData(state.data)
+                        val lastUpdate = Date().toString()
+                        viewModel.setLastUpdatedTime(lastUpdate)
+                        binding.time.text = getString(R.string.update_time, lastUpdate)
                     }
+                    if (state is Resource.Error && state.message != null)
+                        binding.errorVerbose.text =
+                            resources.getString(R.string.error_verbose_message, state.message)
                 }
             }
         }
     }
+
+    private fun <T> ActivityMainBinding.toggleVisibility(state: Resource<T>) {
+        val stateLoading = state is Resource.Loading
+        val stateError = state is Resource.Error
+        val stateSuccess = state is Resource.Success
+
+        val isSuccessDataNull = stateSuccess && state.data == null
+
+        progressBar.isVisible = stateLoading
+        errorVerbose.isVisible = stateError
+
+        emptyList.isVisible = stateError || isSuccessDataNull
+        retryButton.isVisible = stateError || isSuccessDataNull
+        recycler.isVisible = stateSuccess && !isSuccessDataNull
+        tableHeader.isVisible = stateSuccess && !isSuccessDataNull
+    }
 }
+
+

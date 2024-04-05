@@ -16,9 +16,8 @@ internal class CurrencyViewModel(
 
     private var lastUpdateTime: String = "unknown"
 
-    private val _currenciesStateStream = MutableStateFlow<Resource<List<CurrencyItem>>>(
-        Resource.Error("Data not yet fetched")
-    )
+    private val _currenciesStateStream =
+        MutableStateFlow<Resource<List<CurrencyItem>>>(Resource.Loading())
     val currenciesStateStream: StateFlow<Resource<List<CurrencyItem>>>
         get() = _currenciesStateStream.asStateFlow()
 
@@ -30,7 +29,8 @@ internal class CurrencyViewModel(
         getCurrencies()
     }
 
-    private fun getCurrencies() = viewModelScope.launch {
+    fun getCurrencies() = viewModelScope.launch {
+        _currenciesStateStream.value = Resource.Loading()
         _currenciesStateStream.value = getCurrencyUseCase.getCurrencies()
     }
 
