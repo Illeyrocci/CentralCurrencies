@@ -16,8 +16,8 @@
     <color name="onTertiaryContainer">#302933</color>
     <color name="error">#BB6677</color>
     <color name="onError">#FFFFFF</color>
-    <color name="errorContainer">#E6C5CB</color>
-    <color name="onErrorContainer">#331C21</color>
+    <color name="errorContainer">#EEE6C5CB</color>
+    <color name="onErrorContainer">#452834</color>
     <color name="background">#fcfcfc</color>
     <color name="onBackground">#333333</color>
     <color name="surface">#fcfcfc</color>

@@ -29,7 +29,7 @@ internal class CurrencyAdapter(
     }
 
     fun submitData(currencyList: List<CurrencyItem>) {
-        val diffCallback = CurrencyComparator(data, currencyList)
+        val diffCallback = CurrencyListComparator(data, currencyList)
         val diffCurrencies = DiffUtil.calculateDiff(diffCallback)
         data = currencyList
         diffCurrencies.dispatchUpdatesTo(this)

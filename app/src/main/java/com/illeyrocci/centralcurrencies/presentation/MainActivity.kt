@@ -14,6 +14,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.illeyrocci.centralcurrencies.R
 import com.illeyrocci.centralcurrencies.databinding.ActivityMainBinding
+import com.illeyrocci.centralcurrencies.domain.model.CurrencyItem
 import com.illeyrocci.centralcurrencies.domain.model.Resource
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -47,40 +48,58 @@ internal class MainActivity : AppCompatActivity() {
             time.text =
                 resources.getString(R.string.update_time, resources.getString(R.string.unknown))
             retryButton.setOnClickListener { viewModel.refreshUiModel() }
+            retryImageButton.setOnClickListener { viewModel.refreshUiModel() }
         }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.currenciesStateStream.collectLatest { state ->
                     binding.toggleVisibility(state)
-                    if (state is Resource.Success && state.data != null) {
+                    if (state is Resource.Success && !state.data.isNullOrEmpty()) {
                         currencyAdapter.submitData(state.data)
                         val lastUpdate = getCurrentTime()
-                        viewModel.setLastUpdatedTime(lastUpdate)
+                        viewModel.saveLastUpdateTime(lastUpdate)
                         binding.time.text = getString(R.string.update_time, lastUpdate)
                     }
-                    if (state is Resource.Error && state.message != null)
-                        binding.errorVerbose.text =
+                    if (state is Resource.Error) {
+                        if (state.message != null) binding.errorVerbose.text =
                             resources.getString(R.string.error_verbose_message, state.message)
+                        if (!state.data.isNullOrEmpty()) {
+                            currencyAdapter.submitData(state.data)
+                        }
+                    }
                 }
             }
         }
     }
 
-    private fun <T> ActivityMainBinding.toggleVisibility(state: Resource<T>) {
+    /*cases:
+     *Resource.Loading - just progressbar
+     *Resource.Success, data == null - display full error
+     *Resource.Success, data is empty - display full error
+     *Resource.Success, data is OK - display list
+     *Resource.Error, data is empty - display full error
+     *Resource.Error, data is null - display full error
+     *Resource.Error, data is OK - display outdated and list
+    */
+    private fun ActivityMainBinding.toggleVisibility(state: Resource<List<CurrencyItem>>) {
         val stateLoading = state is Resource.Loading
-        val stateError = state is Resource.Error
         val stateSuccess = state is Resource.Success
+        val stateError = state is Resource.Error
 
-        val isSuccessDataNull = stateSuccess && state.data == null
+        val isStorageEmpty = state.data.isNullOrEmpty()
 
-        progressBar.isVisible = stateLoading
-        errorVerbose.isVisible = stateError
+        progressBar.isVisible = state is Resource.Loading
 
-        emptyList.isVisible = stateError || isSuccessDataNull
-        retryButton.isVisible = stateError || isSuccessDataNull
-        recycler.isVisible = stateSuccess && !isSuccessDataNull
-        tableHeader.isVisible = stateSuccess && !isSuccessDataNull
+        errorVerbose.isVisible = isStorageEmpty && !stateLoading
+        emptyList.isVisible = isStorageEmpty && !stateLoading
+        retryButton.isVisible = isStorageEmpty && !stateLoading
+
+        recycler.isVisible = (stateSuccess || stateError) && !isStorageEmpty
+        tableHeader.isVisible = (stateSuccess || stateError) && !isStorageEmpty
+
+        retryImageButton.isVisible = stateError && !isStorageEmpty
+        outdated.isVisible = stateError && !isStorageEmpty
     }
 
     private fun getCurrentTime() =

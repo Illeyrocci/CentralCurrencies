@@ -1,6 +1,6 @@
 package com.illeyrocci.centralcurrencies.domain.repository
 
-import com.illeyrocci.centralcurrencies.CentralCurrenciesApplication
+import android.app.Application
 import com.illeyrocci.centralcurrencies.data.CurrencyRepositoryImpl
 import com.illeyrocci.centralcurrencies.domain.model.CurrencyItem
 import com.illeyrocci.centralcurrencies.domain.model.Resource
@@ -13,8 +13,17 @@ interface CurrencyRepository {
     suspend fun saveCurrenciesInDb(list: List<CurrencyItem>)
 
     companion object {
-        fun provideCurrencyRepository(): CurrencyRepository {
-            return CurrencyRepositoryImpl(CentralCurrenciesApplication.INSTANCE)
+        private var INSTANCE: CurrencyRepositoryImpl? = null
+        fun initialize(application: Application) {
+            if (INSTANCE == null) {
+                INSTANCE = CurrencyRepositoryImpl(application)
+            }
+        }
+
+        fun getInstance(): CurrencyRepository {
+            return INSTANCE ?: throw IllegalStateException(
+                "CurrencyRepositoryImpl must be initialized"
+            )
         }
     }
 }

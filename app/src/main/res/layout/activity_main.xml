@@ -18,38 +18,63 @@
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginEnd="@dimen/main_padding">
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:id="@+id/title_text"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@string/appbar_title"
-                    android:textSize="@dimen/appbar_title" />
+                    android:textSize="@dimen/appbar_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/time"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/half_main"
+                    android:paddingTop="@dimen/main_padding"
                     android:text="@string/update_time"
                     android:textColor="?attr/colorOnSecondaryContainer"
-                    android:textSize="@dimen/appbar_subtitle" />
+                    android:textSize="@dimen/appbar_subtitle"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/title_text" />
 
                 <TextView
                     android:id="@+id/outdated"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:paddingTop="4dp"
                     android:text="@string/the_list_may_be_outdated"
                     android:textColor="?attr/colorOnErrorContainer"
                     android:textSize="@dimen/appbar_subtitle"
-                    android:visibility="gone" />
+                    android:visibility="visible"
+                    android:gravity="center_vertical"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/time"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/retry_image_button"/>
 
-            </LinearLayout>
+                <ImageButton
+                    android:id="@+id/retry_image_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/circle"
+                    android:backgroundTint="@color/errorContainer"
+                    android:contentDescription="@string/retry"
+                    android:src="@drawable/ic_refresh"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/time"
+                    android:layout_margin="@dimen/half_main"/>
 
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.appbar.MaterialToolbar>
 
         <LinearLayout
@@ -92,8 +117,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone" />
+                android:layout_height="match_parent" />
 
             <ProgressBar
                 android:id="@+id/progress_bar"
@@ -101,15 +125,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_marginTop="250dp"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/emptyList"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="250dp"
                 android:gravity="center"
                 android:text="@string/connection_failed"
                 android:textColor="?attr/colorError"
