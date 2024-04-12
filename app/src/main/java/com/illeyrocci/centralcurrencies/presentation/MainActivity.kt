@@ -18,8 +18,6 @@ import com.illeyrocci.centralcurrencies.domain.model.CurrencyItem
 import com.illeyrocci.centralcurrencies.domain.model.Resource
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.text.DateFormat
-import java.util.Date
 
 internal class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,25 +45,26 @@ internal class MainActivity : AppCompatActivity() {
             recycler.adapter = currencyAdapter
             time.text =
                 resources.getString(R.string.update_time, resources.getString(R.string.unknown))
-            retryButton.setOnClickListener { viewModel.refreshUiModel() }
-            retryImageButton.setOnClickListener { viewModel.refreshUiModel() }
+            retryButton.setOnClickListener { viewModel.refreshUiState() }
+            retryImageButton.setOnClickListener { viewModel.refreshUiState() }
         }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.currenciesStateStream.collectLatest { state ->
-                    binding.toggleVisibility(state)
-                    if (state is Resource.Success && !state.data.isNullOrEmpty()) {
-                        currencyAdapter.submitData(state.data)
-                        val lastUpdate = getCurrentTime()
-                        viewModel.saveLastUpdateTime(lastUpdate)
-                        binding.time.text = getString(R.string.update_time, lastUpdate)
+                viewModel.uiState.collectLatest { state ->
+                    val resource = state.currenciesResource
+                    binding.toggleVisibility(resource)
+                    if (resource is Resource.Success && !resource.data.isNullOrEmpty()) {
+                        currencyAdapter.submitData(resource.data)
+                        binding.time.text = getString(R.string.update_time, state.lastUpdateTime)
                     }
-                    if (state is Resource.Error) {
-                        if (state.message != null) binding.errorVerbose.text =
-                            resources.getString(R.string.error_verbose_message, state.message)
-                        if (!state.data.isNullOrEmpty()) {
-                            currencyAdapter.submitData(state.data)
+                    if (resource is Resource.Error) {
+                        if (resource.message != null) binding.errorVerbose.text =
+                            resources.getString(R.string.error_verbose_message, resource.message)
+                        if (!resource.data.isNullOrEmpty()) {
+                            currencyAdapter.submitData(resource.data)
+                            binding.time.text =
+                                getString(R.string.update_time, state.lastUpdateTime)
                         }
                     }
                 }
@@ -102,8 +101,7 @@ internal class MainActivity : AppCompatActivity() {
         outdated.isVisible = stateError && !isStorageEmpty
     }
 
-    private fun getCurrentTime() =
-        DateFormat.getDateTimeInstance().format(Date().time)
+
 }
 
 

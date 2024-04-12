@@ -13,7 +13,7 @@ interface CurrencyRepository {
     suspend fun saveCurrenciesInDb(list: List<CurrencyItem>)
 
     companion object {
-        private var INSTANCE: CurrencyRepositoryImpl? = null
+        private var INSTANCE: CurrencyRepository? = null
         fun initialize(application: Application) {
             if (INSTANCE == null) {
                 INSTANCE = CurrencyRepositoryImpl(application)
