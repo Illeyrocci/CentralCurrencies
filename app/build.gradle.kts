@@ -41,6 +41,7 @@ android {
 
 dependencies {
     ksp(libs.ksp)
+    implementation(libs.androidx.work.ktx)
     implementation(libs.http.interceptor)
     implementation(libs.gson.converter)
     implementation(libs.retrofit)

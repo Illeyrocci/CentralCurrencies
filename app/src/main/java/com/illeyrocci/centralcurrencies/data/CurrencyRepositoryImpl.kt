@@ -9,6 +9,7 @@ import com.illeyrocci.centralcurrencies.data.remote.mapper.CurrencyMapperRemote
 import com.illeyrocci.centralcurrencies.domain.model.CurrencyItem
 import com.illeyrocci.centralcurrencies.domain.model.Resource
 import com.illeyrocci.centralcurrencies.domain.repository.CurrencyRepository
+import kotlinx.coroutines.flow.MutableStateFlow
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.HttpException
@@ -76,4 +77,7 @@ class CurrencyRepositoryImpl(
     override suspend fun saveCurrenciesInDb(list: List<CurrencyItem>) {
         currencyDao.insertAll(localStoragesMapper.mapCurrencyItemListToCurrencyDbModelList(list))
     }
+
+    override val currenciesResourceFlow =
+        MutableStateFlow<Resource<List<CurrencyItem>>>(Resource.Loading())
 }

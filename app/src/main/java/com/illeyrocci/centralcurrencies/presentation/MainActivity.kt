@@ -45,8 +45,8 @@ internal class MainActivity : AppCompatActivity() {
             recycler.adapter = currencyAdapter
             time.text =
                 resources.getString(R.string.update_time, resources.getString(R.string.unknown))
-            retryButton.setOnClickListener { viewModel.refreshUiState() }
-            retryImageButton.setOnClickListener { viewModel.refreshUiState() }
+            retryButton.setOnClickListener { viewModel.setupDataUpdatingWork(0) }
+            retryImageButton.setOnClickListener { viewModel.setupDataUpdatingWork(0) }
         }
 
         lifecycleScope.launch {
